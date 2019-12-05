@@ -11,13 +11,14 @@ pygame.display.set_caption("Pong")
 
 #global atributes
 paddleSpeed = 0.7
-ballSpeed = 0.5
+ballSpeed = 0.6
 
 #p1 paddle
 paddleImg1 = pygame.image.load(r'D:\Git\Pong\paddle.png')
 paddle1X = 350
 paddle1Y = 580
 paddle1XChange = 0
+score1 = 0
 
 def paddle1(x, y):
     screen.blit(paddleImg1, (x, y))
@@ -27,6 +28,7 @@ paddleImg2 = pygame.image.load(r'D:\Git\Pong\paddle.png')
 paddle2X = 350
 paddle2Y = 0
 paddle2XChange = 0
+score2 = 0
 
 def paddle2(x, y):
     screen.blit(paddleImg2, (x, y))
@@ -34,12 +36,49 @@ def paddle2(x, y):
 #ball
 ballImg = pygame.image.load(r'D:\Git\Pong\ball.png')
 ballX = 375
-ballY = 0
+ballY = 275
 ballXChange = ballSpeed
 ballYChange = ballSpeed
 
 def ball(x, y):
     screen.blit(ballImg, (x, y))
+
+def distance1(ballX, ballY, paddle1X, paddle1Y):
+    for xCord1 in range(int(paddle1X), int(paddle1X+100)):
+        ballXTemp = ballX + 25
+        ballYTemp = ballY + 25
+        distance = math.sqrt((math.pow(ballXTemp-xCord1, 2)) + (math.pow(ballYTemp-paddle1Y,2)))
+        if distance <= 25:
+            return True
+    return False
+
+def distance2(ballX, ballY, paddle2X, paddle2Y):
+    for xCord2 in range(int(paddle2X+100), int(paddle2X), -1):
+        paddle2Ytemp = paddle2Y + 20
+        ballXTemp = ballX + 25
+        ballYTemp = ballY + 25
+        distance = math.sqrt((math.pow(ballXTemp-xCord2, 2)) + (math.pow(ballYTemp-paddle2Ytemp,2)))
+        if distance <= 25:
+            return True
+    return False
+
+# def collision(ballX, BallY, paddle1X, paddle1Y, paddle2X, paddle2Y):
+#     for xCord1 in range(int(paddle1X), int(paddle1X+100)):
+#         ballXTemp = ballX + 25
+#         ballYTemp = ballY + 25
+#         distance = math.sqrt((math.pow(ballXTemp-xCord1, 2)) + (math.pow(ballYTemp-paddle1Y,2)))
+#         if distance <= 25:
+#             return True
+
+#     for xCord2 in range(int(paddle2X+100), int(paddle2X), -1):
+#         paddle2Ytemp = paddle2Y + 20
+#         ballXTemp = ballX + 25
+#         ballYTemp = ballY + 25
+#         distance = math.sqrt((math.pow(ballXTemp-xCord2, 2)) + (math.pow(ballYTemp-paddle2Ytemp,2)))
+#         if distance <= 25:
+#             return True
+    
+#     return False
 
 running = True
 #main lopp
@@ -74,6 +113,18 @@ while running:
     ballX += ballXChange
     ballY += ballYChange
     
+    #score
+    if ballY <= -50:
+        score1 += 1
+        ballX = 375
+        ballY = 275
+        print(score1)
+    elif ballY >= 650:
+        score2 += 1
+        ballX = 375
+        ballY = 275
+        print(score2)
+
     #bounce off sides
     if ballX <= 0:
         ballX = 0
@@ -83,12 +134,11 @@ while running:
         ballXChange = -ballSpeed
 
     #bounce off paddle
-    if ballY <= 0:
-        ballY = 0
-        ballYChange = ballSpeed
-    elif ballY >= 550:
-        ballY= 550
-        ballYChange = -ballSpeed
+    if distance1(ballX, ballY, paddle1X, paddle1Y) or distance2(ballX, ballY, paddle2X, paddle2Y):
+        ballYChange = (-1)*ballYChange
+        while distance1(ballX, ballY, paddle1X, paddle1Y) or distance2(ballX, ballY, paddle2X, paddle2Y):
+            ballY += ballYChange
+            ballX += ballXChange
 
     #paddle movement
     paddle1X += paddle1XChange
