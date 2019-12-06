@@ -12,13 +12,13 @@ pygame.display.set_caption("Pong")
 #global atributes
 paddleSpeed = 0.7
 ballSpeed = 0.6
+bounceCounter = 1
 
 #p1 paddle
 paddleImg1 = pygame.image.load(r'D:\Git\Pong\paddle.png')
 paddle1X = 350
 paddle1Y = 580
 paddle1XChange = 0
-score1 = 0
 
 def paddle1(x, y):
     screen.blit(paddleImg1, (x, y))
@@ -28,7 +28,6 @@ paddleImg2 = pygame.image.load(r'D:\Git\Pong\paddle.png')
 paddle2X = 350
 paddle2Y = 0
 paddle2XChange = 0
-score2 = 0
 
 def paddle2(x, y):
     screen.blit(paddleImg2, (x, y))
@@ -80,8 +79,23 @@ def distance2(ballX, ballY, paddle2X, paddle2Y):
     
 #     return False
 
+font = pygame.font.Font('freesansbold.ttf', 24)
+#score player 1
+score1 = 0
+text1X = 10
+text1Y = 555
+
+#score player 2
+score2 = 0
+text2X = 10
+text2Y = 20
+
+def score(x, y, scoreVal):
+    score = font.render("Score: " + str(scoreVal), True, (0, 0, 0))
+    screen.blit(score, (x, y))
+
 running = True
-#main lopp
+#main loop
 while running:
     #screen color
     screen.fill((255, 255, 255))
@@ -118,12 +132,14 @@ while running:
         score1 += 1
         ballX = 375
         ballY = 275
-        print(score1)
+        bounceCounter = 1
+        ballYChange = ballSpeed
     elif ballY >= 650:
         score2 += 1
         ballX = 375
         ballY = 275
-        print(score2)
+        bounceCounter = 1
+        ballYChange = ballSpeed
 
     #bounce off sides
     if ballX <= 0:
@@ -135,7 +151,8 @@ while running:
 
     #bounce off paddle
     if distance1(ballX, ballY, paddle1X, paddle1Y) or distance2(ballX, ballY, paddle2X, paddle2Y):
-        ballYChange = (-1)*ballYChange
+        ballYChange = (-1)*ballYChange*bounceCounter
+        bounceCounter = bounceCounter * 1.01
         while distance1(ballX, ballY, paddle1X, paddle1Y) or distance2(ballX, ballY, paddle2X, paddle2Y):
             ballY += ballYChange
             ballX += ballXChange
@@ -159,4 +176,7 @@ while running:
     paddle1(paddle1X, paddle1Y)
     paddle2(paddle2X, paddle2Y)
     ball(ballX, ballY)
+    score(text1X, text1Y, score1)
+    score(text2X, text2Y, score2)
+
     pygame.display.update()
