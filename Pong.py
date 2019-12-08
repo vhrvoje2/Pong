@@ -13,27 +13,26 @@ pygame.display.set_caption("Pong")
 paddleSpeed = 0.7
 ballSpeed = 0.6
 bounceCounter = 1
+paddleImg = pygame.image.load('paddle.png')
 
 #p1 paddle
-paddleImg1 = pygame.image.load(r'D:\Git\Pong\paddle.png')
 paddle1X = 350
 paddle1Y = 580
 paddle1XChange = 0
 
 def paddle1(x, y):
-    screen.blit(paddleImg1, (x, y))
+    screen.blit(paddleImg, (x, y))
 
 #p2 paddle
-paddleImg2 = pygame.image.load(r'D:\Git\Pong\paddle.png')
 paddle2X = 350
 paddle2Y = 0
 paddle2XChange = 0
 
 def paddle2(x, y):
-    screen.blit(paddleImg2, (x, y))
+    screen.blit(paddleImg, (x, y))
 
 #ball
-ballImg = pygame.image.load(r'D:\Git\Pong\ball.png')
+ballImg = pygame.image.load('ball.png')
 ballX = 375
 ballY = 275
 ballXChange = ballSpeed
